@@ -1,0 +1,17 @@
+{
+  "default": {
+    "username": "user",
+    "password": "pass",
+    "federated": false
+  },
+  "profile1": {
+    "username": "anotherUser",
+    "password": "diffPass",
+    "federated": true
+  },
+  "profileZ": {
+    "username": "userX",
+    "password": "passY",
+    "federated": false
+  }
+}
