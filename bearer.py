@@ -4,8 +4,11 @@ import json
 import sys
 import os.path
 
-if os.path.isfile(os.path.expanduser("~/.anypoint/bearerConfig.py")):
-  sys.path.append(os.path.expanduser("~/.anypoint"))
+# CONFIG = {}  # config can be moved into the main file here. just remove the below CONFIG import.
+CONFIG_FILE_PATH=os.path.expanduser("~/.anypoint/")
+
+if os.path.isfile(CONFIG_FILE_PATH + "bearerConfig.py"):
+  sys.path.append(CONFIG_FILE_PATH)
 from bearerConfig import CONFIG
 
 @plac.annotations(
@@ -17,23 +20,24 @@ from bearerConfig import CONFIG
   profile=plac.Annotation("Stored profile to use", 'option', 'P'),
   verbosity=plac.Annotation("Level of output to display, 0=none", 'option', type=int))
 def main(offline, newline, federated, username, password, profile=CONFIG['defaultProfile'], verbosity=CONFIG['verbosity']):
-  "A script to get a mulesoft authentication bearer token"
+  "A tool to get a mulesoft authentication bearer token"
 
   newline = "\n" if newline else ""
-
-  if not username:  # use a profile
-    fo = open(CONFIG['pathToStoredProfiles'], "r")
-    account=json.loads(fo.read())[profile]
-    fo.close()
-    username=account['username']
-    password=account['password']
-    federated=account['federated']
 
   if offline:
     fo = open(CONFIG['pathToSavedBearerToken'], "r")
     yield [fo.read(), newline]
     fo.close()
     exit(0)
+
+  # Profile processing
+  if not username: 
+    fo = open(CONFIG['pathToStoredProfiles'], "r")
+    account=json.loads(fo.read())[profile]
+    fo.close()
+    username=account['username']
+    password=account['password']
+    federated=account['federated']
 
   # these methods return a tuple with (url, headers, body)
   if federated:
