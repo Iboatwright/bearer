@@ -65,11 +65,11 @@ def main(offline, newline, federated, username, password, profile=CONFIG['defaul
   else:
     # print the error details if verbosity level is greater than zero
     if verbosity >= 1:
-      yield "${req.status_code}"
+      yield "%s" % req.status_code
     if verbosity >= 2:
-      yield "${req.headers}"
+      yield "%s" % req.headers
     if verbosity >= 3:
-      yield "${req.text}"
+      yield "%s" % req.text
     exit(1) # exit code is non-zero
 
 # returns request parameters needed to obtain a bearer token from a standard account

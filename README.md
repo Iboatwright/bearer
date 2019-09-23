@@ -64,13 +64,48 @@ optional arguments:
 There's some minor setup needed to get it working. 
 The simplist use before install is `python3 bearer.py -u username -p password`. After install is `bearer`.
 ### side-effects/non-obvious features
-#### -offline
-skips 
+argument       | effect
+-------------- | ------
+*-offline*     | reads token from the `token` file and skips all other processing
+*-newline*     | appends a `"\n"` string to the token when written to stdout. By default the token is written to stdout without a newline character.
+*-username*    | if a username is supplied then profiles are not processed.
+*-verbosity 0* | This causes the `token` file to be silently updated. I added it for asynchronous use. (it's still blocking so you'd have to spin it off on it's own)
 
 
 ## Example usage
 ### (1) *`bearer`*
 * uses the default profile to get a token.
 * the token is written to stdout and saved to the `token` file
+* notice the lack of newline
+```
+jack@ubuntu:~$ bearer
+4c5a1793-e2dd-4353-8dca-5e594a551af1jack@ubuntu:~$ 
+```
 
-### (1.1) *`bearer -o`*
+### (1.1) *`bearer -o -n`*
+* reads the last token from the `token` file
+```
+jack@ubuntu:~$ bearer -o -n
+4c5a1793-e2dd-4353-8dca-5e594a551af1
+jack@ubuntu:~$ 
+```
+
+### (2) *`bearer -federated -n -username jack@ubuntu -password drowssap`*
+```
+jack@ubuntu:~$ bearer -federated -n -username jack@ubuntu -password drowssap
+4c0dc090-9906-4236-bc17-93ca5862e801
+jack@ubuntu:~$ 
+```
+
+### (3) *`bearer -username jack@ubuntu -password wrongPassword`*
+* example of `-verbosity 4` (current max) error output
+```
+jack@ubuntu:~/code/bearer$ bearer -username jack@ubuntu -password wrongpassword
+401
+{'Date': 'Mon, 23 Jan 2019 21:18:31 GMT', 'Expires': '-1', 'Pragma': 'no-cache', 'Server': 'nginx', 'Set-Cookie': '_csrf=s2iakagWQHb7q6k9TkkaJlzl; Path=/; HttpOnly; Secure, XSRF-TOKEN=ccUV9KG0-tYNXMB8SPa2c2PGmTnn; Path=/; Secure, mulesoft.sess=eyJpZCI6IkoczTEhzTU5VeWRBUtyc3o5In0=; path=/; secure; httponly, mulesoft.sess.sig=RsLbJBuMimK4bWQzHA; path=/; secure; httponly', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'Vary': 'X-HTTP-Method-Override', 'WWW-Authenticate': 'login failed', 'X-ANYPNT-TRX-ID': '7efc0260', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN, SAMEORIGIN', 'X-RateLimit-Limit': '150', 'X-RateLimit-Remaining': '149', 'X-RateLimit-Reset': '1569993520', 'X-XSS-Protection': '1; mode=block', 'Content-Length': '13', 'Connection': 'keep-alive'}
+Unauthorized
+jack@ubuntu:~/code/bearer$ 
+```
+
+## Potential issues
+* If you are getting 401 errors the problem might be with the format of the SAML response from your organization's IDP single sign on page. Use the steps on [this](https://docs.mulesoft.com/access-management/troubleshoot-saml-assertions-task) page to get a copy of the saml output. Then you can alter the `bearer.getFederatedRequestParams()` method's `samlResponse = unquote(str(request.body,'utf-8'))[13:]` variable to match the expected format.
