@@ -62,7 +62,7 @@ optional arguments:
 ```
 > See the [Plac](http://micheles.github.io/plac/) documentation for more about argument handling.
 There's some minor setup needed to get it working. 
-The simplist use before install is `python3 bearer.py -u username -p password`. After install is `bearer`.
+The simplist use before install is *`python3 bearer.py -u username -p password`*. After install it cuts down to *`bearer`*.
 ### side-effects/non-obvious features
 argument       | effect
 -------------- | ------
