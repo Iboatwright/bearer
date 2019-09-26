@@ -37,13 +37,13 @@ def main(offline, newline, federated, username, password, profile=CONFIG['defaul
     fo.close()
     username=account['username']
     password=account['password']
-    federated=account['federated']
+    federated=account['federated'] if 'federated' in account else False
 
   # these methods return a tuple with (url, headers, body)
   if federated:
     url, headers, body = getFederatedRequestParams(username, password, CONFIG['samlUrl'])
   else:
-    url, headers, body = getRequestParams(username, password)
+    url, headers, body = getAnypointRequestParams(username, password)
 
   # late import to avoid cost overhead if offline... maybe
   import requests
@@ -72,8 +72,8 @@ def main(offline, newline, federated, username, password, profile=CONFIG['defaul
       yield "%s" % req.text
     exit(1) # exit code is non-zero
 
-# returns request parameters needed to obtain a bearer token from a standard account
-def getRequestParams(username, password):
+# returns request parameters needed to obtain a bearer token from the Anypoint IdP
+def getAnypointRequestParams(username, password):
   url = 'https://anypoint.mulesoft.com/accounts/login'
   headers = {'Content-Type': 'application/json'}
   body = """{
@@ -82,7 +82,7 @@ def getRequestParams(username, password):
   }""" % (username, password)
   return url, headers, body
 
-# returns request parameters needed to obtain a bearer token from a federated account
+# returns request parameters needed to obtain a bearer token from a federated IdP
 def getFederatedRequestParams(username, password, samlUrl):
   import selenium
   from seleniumwire import webdriver
