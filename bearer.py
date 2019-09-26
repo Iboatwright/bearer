@@ -102,7 +102,7 @@ def getFederatedRequestParams(username, password, samlUrl):
   # Open federated authentication webpage that returns the needed saml response
   driver.get(samlUrl)
 
-  time.sleep(2)
+  time.sleep(2)  # waiting for the page to load
   # select username box
   id_box = driver.find_element_by_id('userNameInput')
 
@@ -135,6 +135,10 @@ def getFederatedRequestParams(username, password, samlUrl):
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
       }
+
+  # close the chrome browser instance
+  driver.quit()
+
   return url, headers, body
 
 if __name__ == "__main__":

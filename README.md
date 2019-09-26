@@ -35,7 +35,7 @@ This is a python 3 tool to help automate getting Mulesoft bearer authorization t
 * I just copy this into `~/.local/bin/` and remove the .py extension. You might need to *`chmod +x bearer`* to make it executable.
 
 ### **extra/federated.py**
-* this is an early version of the script I which just processed federated a single hard-coded federated Id.
+* this is an early version of the script which processed a single hard-coded federated Id.
 
 ### **token** *aka savedBearerToken*
 * after a token is successfully acquired it is saved to a plain text file (default is `~/.anypoint/token`).
