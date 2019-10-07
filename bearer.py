@@ -86,6 +86,9 @@ def getAnypointRequestParams(username, password):
 def getFederatedRequestParams(username, password, samlUrl):
   import selenium
   from seleniumwire import webdriver
+  from selenium.webdriver.common.by import By
+  from selenium.webdriver.support.ui import WebDriverWait
+  from selenium.webdriver.support import expected_conditions as EC
   from selenium.webdriver.chrome.options import Options
   import time
   from urllib.parse import unquote
@@ -102,9 +105,9 @@ def getFederatedRequestParams(username, password, samlUrl):
   # Open federated authentication webpage that returns the needed saml response
   driver.get(samlUrl)
 
-  time.sleep(2)  # waiting for the page to load
-  # select username box
-  id_box = driver.find_element_by_id('userNameInput')
+  # select the username box when it to loads
+  wait = WebDriverWait(driver, 10)
+  id_box = wait.until(EC.element_to_be_clickable((By.ID, 'userNameInput')))
 
   # enter username
   id_box.send_keys(username)
