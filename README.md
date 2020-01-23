@@ -109,3 +109,7 @@ jack@ubuntu:~/code/bearer$
 
 ## Potential issues
 * If you are getting 401 errors the problem might be with the format of the SAML response from your organization's IDP single sign on page. Use the steps on [this](https://docs.mulesoft.com/access-management/troubleshoot-saml-assertions-task) page to get a copy of the saml output. Then you can alter the `bearer.getFederatedRequestParams()` method's `samlResponse = unquote(str(request.body,'utf-8'))[13:]` variable to match the expected format.
+* Error message: ```selenium.common.exceptions.SessionNotCreatedException: Message: session not created: This version of ChromeDriver only supports Chrome version [XX]```
+   * You need to download/install the version ChromeDriver that matches your version of Chrome. ChromeDriver is a single file you can overwrite. Just unzip the new version ontop of the old one.
+* Error message: ```UnboundLocalError: local variable 'url' referenced before assignment```
+   * I got this from an invalid password. I'll add better error handling eventually.
